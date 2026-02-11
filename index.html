@@ -20,6 +20,7 @@ body {
     box-shadow: 0 5px 20px rgba(0,0,0,0.1);
     width: 500px;
     text-align: center;
+    position: relative;
 }
 
 h2 {
@@ -33,9 +34,15 @@ input {
     margin-bottom: 15px;
 }
 
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
 button {
     padding: 10px 15px;
-    margin: 5px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -45,7 +52,16 @@ button {
 .check { background: #4CAF50; color: white; }
 .skip { background: #f39c12; color: white; }
 .next { background: #3498db; color: white; }
-.reveal { background: #e74c3c; color: white; }
+.reveal { 
+    background: #e74c3c; 
+    color: white; 
+    position: absolute;
+    top: 40px;
+    right: 20px;
+    display: none;
+    font-size: 13px;
+    padding: 7px 12px;
+}
 
 .result {
     margin-top: 15px;
@@ -60,11 +76,13 @@ button {
 <div class="container">
     <h2 id="polishWord"></h2>
     <input type="text" id="answer" placeholder="Wpisz tłumaczenie...">
-    <br>
-    <button class="check" onclick="checkAnswer()">Sprawdź</button>
-    <button class="skip" onclick="skipWord()">Pomiń</button>
-    <button class="next" onclick="nextWord()">Następne</button>
-    <button class="reveal" id="revealBtn" onclick="revealAnswer()" style="display:none;">Odkryj słówko</button>
+    
+    <div class="button-container">
+        <button class="check" onclick="checkOrNext()">Sprawdź / Następne</button>
+        <button class="skip" onclick="skipWord()">Pomiń</button>
+    </div>
+
+    <button class="reveal" id="revealBtn" onclick="revealAnswer()">Odkryj słówko</button>
     <div class="result" id="result"></div>
 </div>
 
@@ -93,42 +111,12 @@ const words = [
 {pl:"torba na zakupy", en:["shopping bag"]},
 {pl:"gąbka", en:["sponge"]},
 {pl:"zamiatać podłogę", en:["sweep the floor"]},
-{pl:"ścierka", en:["tea towel"]},
-{pl:"zakwaterowanie", en:["accommodation"]},
-{pl:"ogłoszenie", en:["ad"]},
-{pl:"reklama", en:["advert"]},
-{pl:"aukcja", en:["auction"]},
-{pl:"rachunek", en:["bill"]},
-{pl:"budżet", en:["budget"]},
-{pl:"kaucja", en:["deposit"]},
-{pl:"agent nieruchomości", en:["estate agent"]},
-{pl:"współlokator", en:["flatmate","housemate","roommate"]},
-{pl:"właściciel", en:["landlord","landlady"]},
-{pl:"mieszkać samemu", en:["live on one's own","live on ones own"]},
-{pl:"przeprowadzać się", en:["move house"]},
-{pl:"wprowadzać się", en:["move in"]},
-{pl:"wyprowadzać się", en:["move out"]},
-{pl:"wypowiedzenie", en:["notice"]},
-{pl:"zapłacić z góry", en:["pay in advance"]},
-{pl:"płatność", en:["payment"]},
-{pl:"samochód do przewożenia mebli", en:["removal van"]},
-{pl:"wynająć", en:["rent"]},
-{pl:"dzielić z kimś pokój", en:["share a room"]},
-{pl:"dzielić z kimś mieszkanie", en:["share a flat"]},
-{pl:"dzielić z kimś dom", en:["share a house"]},
-{pl:"do wynajęcia", en:["to let"]},
-{pl:"obowiązek domowy", en:["chore"]},
-{pl:"czystość", en:["cleanliness"]},
-{pl:"pozbyć się", en:["get rid of sth","get rid of something"]},
-{pl:"odkładać coś na później", en:["put sth off","put something off"]},
-{pl:"zagotować wodę", en:["put the kettle on"]},
-{pl:"znosić coś", en:["put up with sth","put up with something"]},
-{pl:"nieskazitelnie czysty", en:["spotless"]},
-{pl:"wyrzucić coś", en:["throw sth away","throw something away"]}
+{pl:"ścierka", en:["tea towel"]}
 ];
 
 let currentIndex = 0;
 let lastAnswerCorrect = false;
+let checked = false; // Czy odpowiedź została już sprawdzona
 
 function shuffle(array) {
     return array.sort(() => Math.random() - 0.5);
@@ -143,33 +131,38 @@ function showWord() {
     document.getElementById("result").className = "result";
     document.getElementById("revealBtn").style.display = "none";
     lastAnswerCorrect = false;
+    checked = false;
 }
 
 function normalize(text) {
     return text.toLowerCase().trim();
 }
 
-function checkAnswer() {
-    const userAnswer = normalize(document.getElementById("answer").value);
-    const correctAnswers = words[currentIndex].en.map(a => normalize(a));
-
-    if (correctAnswers.includes(userAnswer)) {
-        document.getElementById("result").textContent = "✅ Poprawnie!";
-        document.getElementById("result").className = "result correct";
-        document.getElementById("revealBtn").style.display = "none";
-        lastAnswerCorrect = true;
-        return true;
+// Sprawdzenie odpowiedzi lub przejście dalej
+function checkOrNext() {
+    if (!checked) {
+        const userAnswer = normalize(document.getElementById("answer").value);
+        const correctAnswers = words[currentIndex].en.map(a => normalize(a));
+        if (correctAnswers.includes(userAnswer)) {
+            document.getElementById("result").textContent = "✅ Poprawnie!";
+            document.getElementById("result").className = "result correct";
+            lastAnswerCorrect = true;
+        } else {
+            document.getElementById("result").textContent = "❌ Błąd!";
+            document.getElementById("result").className = "result wrong";
+            document.getElementById("revealBtn").style.display = "inline-block";
+            lastAnswerCorrect = false;
+        }
+        checked = true;
     } else {
-        document.getElementById("result").textContent = "❌ Błąd!";
-        document.getElementById("result").className = "result wrong";
-        document.getElementById("revealBtn").style.display = "inline-block";
-        lastAnswerCorrect = false;
-        return false;
+        // Jeśli sprawdzono już odpowiedź, przejdź dalej
+        nextWord();
     }
 }
 
 function revealAnswer() {
     document.getElementById("result").textContent += " Poprawna odpowiedź: " + words[currentIndex].en.join(" / ");
+    lastAnswerCorrect = true; // Po odkryciu można przejść dalej Enterem
 }
 
 function skipWord() {
@@ -177,8 +170,8 @@ function skipWord() {
 }
 
 function nextWord(skip=false) {
-    if (!skip && !lastAnswerCorrect) {
-        checkAnswer();
+    if (!skip && !lastAnswerCorrect && !checked) {
+        checkOrNext(); // Jeśli nie sprawdzono i odpowiedź źle → sprawdź
         return;
     }
     currentIndex++;
@@ -189,11 +182,11 @@ function nextWord(skip=false) {
     showWord();
 }
 
-// Obsługa Enter
+// Enter obsługuje jak kliknięcie sprawdź/następne
 document.getElementById("answer").addEventListener("keydown", function(e) {
     if (e.key === "Enter") {
         e.preventDefault();
-        nextWord();
+        checkOrNext();
     }
 });
 
