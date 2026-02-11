@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Nauka słówek</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    width: 500px;
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+input {
+    width: 90%;
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+button {
+    padding: 10px 15px;
+    margin: 5px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.check { background: #4CAF50; color: white; }
+.skip { background: #f39c12; color: white; }
+.next { background: #3498db; color: white; }
+
+.result {
+    margin-top: 15px;
+    font-weight: bold;
+}
+.correct { color: green; }
+.wrong { color: red; }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2 id="polishWord"></h2>
+    <input type="text" id="answer" placeholder="Wpisz tłumaczenie...">
+    <br>
+    <button class="check" onclick="checkAnswer()">Sprawdź</button>
+    <button class="skip" onclick="skipWord()">Pomiń</button>
+    <button class="next" onclick="nextWord()">Następne</button>
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+const words = [
+{pl:"szczotka", en:["brush"]},
+{pl:"zmieniać pościel", en:["change the sheets"]},
+{pl:"szufelka", en:["dustpan"]},
+{pl:"pracować w ogrodzie", en:["do the gardening"]},
+{pl:"robić pranie", en:["do the laundry"]},
+{pl:"zajmować się domem", en:["do the housework"]},
+{pl:"wycierać kurz z mebli", en:["dust the furniture"]},
+{pl:"opróżniać zmywarkę", en:["empty the dishwasher"]},
+{pl:"opróżniać kosz na śmieci", en:["empty the rubbish bin"]},
+{pl:"pozbywać się niepotrzebnych rzeczy", en:["have a clear out"]},
+{pl:"mieć dobrą rękę do roślin", en:["have green fingers"]},
+{pl:"odkurzać dywan", en:["hoover the carpet"]},
+{pl:"prasować ubrania", en:["iron the clothes"]},
+{pl:"utrzymywać coś w nienagannym porządku", en:["keep sth neat and tidy"]},
+{pl:"wprowadzać ulepszenia", en:["make improvements"]},
+{pl:"ścielić łóżko", en:["make the bed"]},
+{pl:"wycierać podłogę mopem", en:["mop the floor"]},
+{pl:"kosić trawnik", en:["mow the lawn"]},
+{pl:"odnowić korytarz", en:["renovate a corridor"]},
+{pl:"gumowe rękawiczki", en:["rubber gloves"]},
+{pl:"torba na zakupy", en:["shopping bag"]},
+{pl:"gąbka", en:["sponge"]},
+{pl:"zamiatać podłogę", en:["sweep the floor"]},
+{pl:"ścierka", en:["tea towel"]},
+{pl:"zakwaterowanie", en:["accommodation"]},
+{pl:"ogłoszenie", en:["ad"]},
+{pl:"reklama", en:["advert"]},
+{pl:"aukcja", en:["auction"]},
+{pl:"rachunek", en:["bill"]},
+{pl:"budżet", en:["budget"]},
+{pl:"kaucja", en:["deposit"]},
+{pl:"agent nieruchomości", en:["estate agent"]},
+{pl:"współlokator", en:["flatmate","housemate","roommate"]},
+{pl:"właściciel", en:["landlord","landlady"]},
+{pl:"mieszkać samemu", en:["live on one's own","live on ones own"]},
+{pl:"przeprowadzać się", en:["move house"]},
+{pl:"wprowadzać się", en:["move in"]},
+{pl:"wyprowadzać się", en:["move out"]},
+{pl:"wypowiedzenie", en:["notice"]},
+{pl:"zapłacić z góry", en:["pay in advance"]},
+{pl:"płatność", en:["payment"]},
+{pl:"samochód do przewożenia mebli", en:["removal van"]},
+{pl:"wynająć", en:["rent"]},
+{pl:"dzielić z kimś pokój", en:["share a room"]},
+{pl:"dzielić z kimś mieszkanie", en:["share a flat"]},
+{pl:"dzielić z kimś dom", en:["share a house"]},
+{pl:"do wynajęcia", en:["to let"]},
+{pl:"obowiązek domowy", en:["chore"]},
+{pl:"czystość", en:["cleanliness"]},
+{pl:"pozbyć się", en:["get rid of sth","get rid of something"]},
+{pl:"odkładać coś na później", en:["put sth off","put something off"]},
+{pl:"zagotować wodę", en:["put the kettle on"]},
+{pl:"znosić coś", en:["put up with sth","put up with something"]},
+{pl:"nieskazitelnie czysty", en:["spotless"]},
+{pl:"wyrzucić coś", en:["throw sth away","throw something away"]}
+];
+
+let currentIndex = 0;
+
+function shuffle(array) {
+    return array.sort(() => Math.random() - 0.5);
+}
+
+shuffle(words);
+
+function showWord() {
+    document.getElementById("polishWord").textContent = words[currentIndex].pl;
+    document.getElementById("answer").value = "";
+    document.getElementById("result").textContent = "";
+    document.getElementById("result").className = "result";
+}
+
+function normalize(text) {
+    return text.toLowerCase().trim();
+}
+
+function checkAnswer() {
+    const userAnswer = normalize(document.getElementById("answer").value);
+    const correctAnswers = words[currentIndex].en.map(a => normalize(a));
+
+    if (correctAnswers.includes(userAnswer)) {
+        document.getElementById("result").textContent = "✅ Poprawnie!";
+        document.getElementById("result").className = "result correct";
+    } else {
+        document.getElementById("result").textContent =
+            "❌ Błąd! Poprawna odpowiedź: " + words[currentIndex].en.join(" / ");
+        document.getElementById("result").className = "result wrong";
+    }
+}
+
+function skipWord() {
+    document.getElementById("result").textContent =
+        "⏭ Pominięto. Poprawna odpowiedź: " + words[currentIndex].en.join(" / ");
+    document.getElementById("result").className = "result";
+}
+
+function nextWord() {
+    currentIndex++;
+    if (currentIndex >= words.length) {
+        shuffle(words);
+        currentIndex = 0;
+    }
+    showWord();
+}
+
+showWord();
+</script>
+
+</body>
+</html>
