@@ -45,6 +45,7 @@ button {
 .check { background: #4CAF50; color: white; }
 .skip { background: #f39c12; color: white; }
 .next { background: #3498db; color: white; }
+.reveal { background: #e74c3c; color: white; }
 
 .result {
     margin-top: 15px;
@@ -63,6 +64,7 @@ button {
     <button class="check" onclick="checkAnswer()">Sprawdź</button>
     <button class="skip" onclick="skipWord()">Pomiń</button>
     <button class="next" onclick="nextWord()">Następne</button>
+    <button class="reveal" id="revealBtn" onclick="revealAnswer()" style="display:none;">Odkryj słówko</button>
     <div class="result" id="result"></div>
 </div>
 
@@ -138,6 +140,7 @@ function showWord() {
     document.getElementById("answer").value = "";
     document.getElementById("result").textContent = "";
     document.getElementById("result").className = "result";
+    document.getElementById("revealBtn").style.display = "none";
 }
 
 function normalize(text) {
@@ -151,17 +154,23 @@ function checkAnswer() {
     if (correctAnswers.includes(userAnswer)) {
         document.getElementById("result").textContent = "✅ Poprawnie!";
         document.getElementById("result").className = "result correct";
+        document.getElementById("revealBtn").style.display = "none";
     } else {
-        document.getElementById("result").textContent =
-            "❌ Błąd! Poprawna odpowiedź: " + words[currentIndex].en.join(" / ");
+        document.getElementById("result").textContent = "❌ Błąd!";
         document.getElementById("result").className = "result wrong";
+        document.getElementById("revealBtn").style.display = "inline-block";
     }
+}
+
+function revealAnswer() {
+    document.getElementById("result").textContent += " Poprawna odpowiedź: " + words[currentIndex].en.join(" / ");
 }
 
 function skipWord() {
     document.getElementById("result").textContent =
         "⏭ Pominięto. Poprawna odpowiedź: " + words[currentIndex].en.join(" / ");
     document.getElementById("result").className = "result";
+    document.getElementById("revealBtn").style.display = "none";
 }
 
 function nextWord() {
