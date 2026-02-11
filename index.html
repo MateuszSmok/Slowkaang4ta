@@ -128,6 +128,7 @@ const words = [
 ];
 
 let currentIndex = 0;
+let lastAnswerCorrect = false;
 
 function shuffle(array) {
     return array.sort(() => Math.random() - 0.5);
@@ -141,6 +142,7 @@ function showWord() {
     document.getElementById("result").textContent = "";
     document.getElementById("result").className = "result";
     document.getElementById("revealBtn").style.display = "none";
+    lastAnswerCorrect = false;
 }
 
 function normalize(text) {
@@ -155,10 +157,14 @@ function checkAnswer() {
         document.getElementById("result").textContent = "✅ Poprawnie!";
         document.getElementById("result").className = "result correct";
         document.getElementById("revealBtn").style.display = "none";
+        lastAnswerCorrect = true;
+        return true;
     } else {
         document.getElementById("result").textContent = "❌ Błąd!";
         document.getElementById("result").className = "result wrong";
         document.getElementById("revealBtn").style.display = "inline-block";
+        lastAnswerCorrect = false;
+        return false;
     }
 }
 
@@ -167,13 +173,14 @@ function revealAnswer() {
 }
 
 function skipWord() {
-    document.getElementById("result").textContent =
-        "⏭ Pominięto. Poprawna odpowiedź: " + words[currentIndex].en.join(" / ");
-    document.getElementById("result").className = "result";
-    document.getElementById("revealBtn").style.display = "none";
+    nextWord(true);
 }
 
-function nextWord() {
+function nextWord(skip=false) {
+    if (!skip && !lastAnswerCorrect) {
+        checkAnswer();
+        return;
+    }
     currentIndex++;
     if (currentIndex >= words.length) {
         shuffle(words);
@@ -181,6 +188,14 @@ function nextWord() {
     }
     showWord();
 }
+
+// Obsługa Enter
+document.getElementById("answer").addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+        e.preventDefault();
+        nextWord();
+    }
+});
 
 showWord();
 </script>
