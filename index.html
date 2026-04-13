@@ -1,197 +1,88 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-<meta charset="UTF-8">
-<title>Nauka słówek</title>
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background: #f4f6f8;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-.container {
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-    width: 500px;
-    text-align: center;
-    position: relative;
-}
-
-h2 {
-    margin-bottom: 20px;
-}
-
-input {
-    width: 90%;
-    padding: 10px;
-    font-size: 16px;
-    margin-bottom: 15px;
-}
-
-.button-container {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-button {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.check { background: #4CAF50; color: white; }
-.skip { background: #f39c12; color: white; }
-.next { background: #3498db; color: white; }
-.reveal { 
-    background: #e74c3c; 
-    color: white; 
-    position: absolute;
-    top: 40px;
-    right: 20px;
-    display: none;
-    font-size: 13px;
-    padding: 7px 12px;
-}
-
-.result {
-    margin-top: 15px;
-    font-weight: bold;
-}
-.correct { color: green; }
-.wrong { color: red; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Ze Słówkami</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="page-shell">
+        <header class="hero">
+            <div class="hero-copy">
+                <p class="eyebrow">Angielski • nauka słówek</p>
+                <h1>Wybierz dział i zgaduj angielskie słówka z polskiego.</h1>
+                <p class="hero-text">
+                    Klikasz kafelek, dostajesz polskie słowo i wpisujesz odpowiedź po angielsku.
+                    Po trzech błędach zobaczysz poprawną odpowiedź i od razu możesz losować następne.
+                </p>
+            </div>
+            <div class="hero-panel">
+                <div class="hero-stat">
+                    <span class="hero-stat-label">Działy</span>
+                    <strong id="categoryCount">0</strong>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-label">Słówek</span>
+                    <strong id="wordCount">0</strong>
+                </div>
+            </div>
+        </header>
 
-<div class="container">
-    <h2 id="polishWord"></h2>
-    <input type="text" id="answer" placeholder="Wpisz tłumaczenie...">
-    
-    <div class="button-container">
-        <button class="check" onclick="checkOrNext()">Sprawdź / Następne</button>
-        <button class="skip" onclick="skipWord()">Pomiń</button>
+        <main class="layout">
+            <section class="category-section">
+                <div class="section-heading">
+                    <p class="section-kicker">Kategorie</p>
+                    <h2>Wybierz zestaw</h2>
+                </div>
+                <div id="categoryGrid" class="category-grid"></div>
+            </section>
+
+            <section class="quiz-section">
+                <div class="quiz-card">
+                    <div class="quiz-topbar">
+                        <div>
+                            <p class="section-kicker">Aktywny dział</p>
+                            <h2 id="activeCategory">Wybierz kafelek</h2>
+                        </div>
+                        <span id="progressBadge" class="progress-badge">0 słówek</span>
+                    </div>
+
+                    <div class="question-panel">
+                        <p class="label">Słowo po polsku</p>
+                        <div id="promptWord" class="prompt-word">Kliknij dział, żeby zacząć.</div>
+                        <p class="hint">Wpisz odpowiedź po angielsku i zatwierdź Enterem albo przyciskiem.</p>
+                    </div>
+
+                    <form id="answerForm" class="answer-form" autocomplete="off">
+                        <label class="label" for="answerInput">Twoja odpowiedź</label>
+                        <input id="answerInput" type="text" placeholder="np. accountant" disabled>
+                        <div class="button-row">
+                            <button id="checkButton" type="submit" class="primary-button" disabled>Sprawdź</button>
+                            <button id="nextButton" type="button" class="secondary-button" disabled>Losuj inne słówko</button>
+                        </div>
+                    </form>
+
+                    <div class="status-grid">
+                        <div class="status-box">
+                            <span class="status-label">Próby</span>
+                            <strong id="attemptsValue">0 / 3</strong>
+                        </div>
+                        <div class="status-box">
+                            <span class="status-label">Poprawna odpowiedź</span>
+                            <strong id="answerReveal">Ukryta</strong>
+                        </div>
+                    </div>
+
+                    <p id="feedbackMessage" class="feedback neutral">Najpierw wybierz dział z kafelków po lewej.</p>
+                </div>
+            </section>
+        </main>
     </div>
 
-    <button class="reveal" id="revealBtn" onclick="revealAnswer()">Odkryj słówko</button>
-    <div class="result" id="result"></div>
-</div>
-
-<script>
-const words = [
-{pl:"szczotka", en:["brush"]},
-{pl:"zmieniać pościel", en:["change the sheets"]},
-{pl:"szufelka", en:["dustpan"]},
-{pl:"pracować w ogrodzie", en:["do the gardening"]},
-{pl:"robić pranie", en:["do the laundry"]},
-{pl:"zajmować się domem", en:["do the housework"]},
-{pl:"wycierać kurz z mebli", en:["dust the furniture"]},
-{pl:"opróżniać zmywarkę", en:["empty the dishwasher"]},
-{pl:"opróżniać kosz na śmieci", en:["empty the rubbish bin"]},
-{pl:"pozbywać się niepotrzebnych rzeczy", en:["have a clear out"]},
-{pl:"mieć dobrą rękę do roślin", en:["have green fingers"]},
-{pl:"odkurzać dywan", en:["hoover the carpet"]},
-{pl:"prasować ubrania", en:["iron the clothes"]},
-{pl:"utrzymywać coś w nienagannym porządku", en:["keep sth neat and tidy"]},
-{pl:"wprowadzać ulepszenia", en:["make improvements"]},
-{pl:"ścielić łóżko", en:["make the bed"]},
-{pl:"wycierać podłogę mopem", en:["mop the floor"]},
-{pl:"kosić trawnik", en:["mow the lawn"]},
-{pl:"odnowić korytarz", en:["renovate a corridor"]},
-{pl:"gumowe rękawiczki", en:["rubber gloves"]},
-{pl:"torba na zakupy", en:["shopping bag"]},
-{pl:"gąbka", en:["sponge"]},
-{pl:"zamiatać podłogę", en:["sweep the floor"]},
-{pl:"ścierka", en:["tea towel"]}
-];
-
-let currentIndex = 0;
-let lastAnswerCorrect = false;
-let checked = false; // Czy odpowiedź została już sprawdzona
-
-function shuffle(array) {
-    return array.sort(() => Math.random() - 0.5);
-}
-
-shuffle(words);
-
-function showWord() {
-    document.getElementById("polishWord").textContent = words[currentIndex].pl;
-    document.getElementById("answer").value = "";
-    document.getElementById("result").textContent = "";
-    document.getElementById("result").className = "result";
-    document.getElementById("revealBtn").style.display = "none";
-    lastAnswerCorrect = false;
-    checked = false;
-}
-
-function normalize(text) {
-    return text.toLowerCase().trim();
-}
-
-// Sprawdzenie odpowiedzi lub przejście dalej
-function checkOrNext() {
-    if (!checked) {
-        const userAnswer = normalize(document.getElementById("answer").value);
-        const correctAnswers = words[currentIndex].en.map(a => normalize(a));
-        if (correctAnswers.includes(userAnswer)) {
-            document.getElementById("result").textContent = "✅ Poprawnie!";
-            document.getElementById("result").className = "result correct";
-            lastAnswerCorrect = true;
-        } else {
-            document.getElementById("result").textContent = "❌ Błąd!";
-            document.getElementById("result").className = "result wrong";
-            document.getElementById("revealBtn").style.display = "inline-block";
-            lastAnswerCorrect = false;
-        }
-        checked = true;
-    } else {
-        // Jeśli sprawdzono już odpowiedź, przejdź dalej
-        nextWord();
-    }
-}
-
-function revealAnswer() {
-    document.getElementById("result").textContent += " Poprawna odpowiedź: " + words[currentIndex].en.join(" / ");
-    lastAnswerCorrect = true; // Po odkryciu można przejść dalej Enterem
-}
-
-function skipWord() {
-    nextWord(true);
-}
-
-function nextWord(skip=false) {
-    if (!skip && !lastAnswerCorrect && !checked) {
-        checkOrNext(); // Jeśli nie sprawdzono i odpowiedź źle → sprawdź
-        return;
-    }
-    currentIndex++;
-    if (currentIndex >= words.length) {
-        shuffle(words);
-        currentIndex = 0;
-    }
-    showWord();
-}
-
-// Enter obsługuje jak kliknięcie sprawdź/następne
-document.getElementById("answer").addEventListener("keydown", function(e) {
-    if (e.key === "Enter") {
-        e.preventDefault();
-        checkOrNext();
-    }
-});
-
-showWord();
-</script>
-
+    <script src="script.js"></script>
 </body>
 </html>
