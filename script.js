@@ -1,29 +1,271 @@
-const rawCategories = {
-    "JOBS": "accountant-księgowy/księgowa,architect-architekt/architektka,cashier-kasjer/kasjerka,checkoutassistant-kasjer/kasjerka w supermarkecie,chef-kucharz/kucharka,computerprogrammer-programista/programistka,economist-ekonomista/ekonomistka,editor-redaktor/redaktorka,electrician-elektryk,farmer-rolnik,fashiondesigner-projektant/projektantka mody,firefighter-strażak,flightattendant-steward/stewardesa,journalist-dziennikarz/dziennikarka,judge-sędzia,lawyer-prawnik/prawniczka,lecturer-wykładowca/wykładowczyni,librarian-bibliotekarz/bibliotekarka,manager-kierownik/kierowniczka,nurse-pielęgniarka,officeassistant-asystent/asystentka biura,paramedic-ratownik medyczny,pharmacist-aptekarz/aptekarka,plumber-hydraulik,policeofficer-policjant/policjantka,receptionist-recepcjonista/recepcjonistka,salesassistant-sprzedawca/sprzedawczyni,soldier-żołnierz,surgeon-chirurg,travelagent-pracownik biura podróży,TVpresenter-prezenter/prezenterka telewizyjna,vet-weterynarz/weterynarka",
-    "WORK-DUTIES": "beatwork-być w pracy,beinchargeofsth-odpowiadać za coś,beresponsibleforsth-być odpowiedzialnym za coś,collectdata-zbierać dane,dopaperwork-zajmować się dokumentami,dosthforaliving-utrzymywać się z czegoś,fulfilduties-wypełniać obowiązki,jobdescription-zakres obowiązków,profession-zawód,supervise-nadzorować,takeresponsibilityforsth-wziąć odpowiedzialność za coś,workassb-pracować jako ktoś,workforacompany-pracować w firmie,workinateam-pracować w zespole,workinsales-pracować w sprzedaży,workinthetouristindustry-pracować w branży turystycznej,workonsth-pracować nad czymś,workunderpressure-pracować pod presją,workwithsb-pracować z kimś",
-    "JOB-ADJECTIVES": "inspiring-inspirująca,manual-fizyczna,monotonous-monotonna,motivating-motywująca,skilled-wymagająca kwalifikacji,steady-stabilna,stress-free-bezstresowa,unpaid-bezpłatna,well-paid-dobrze płatna,challenging-ambitna,dead-end-bez perspektyw,high-powered-na wysokim stanowisku,menial-fizyczna/prosta,rewarding-satysfakcjonująca,undemanding-niewymagająca",
-    "WORK-CONDITIONS": "bebadlypaid-być źle opłacanym,bewell-paid-być dobrze opłacanym,businesstrip-podróż służbowa,chanceofpromotion-szansa na awans,colleague-kolega/koleżanka z pracy,doovertime-pracować w nadgodzinach,earnings-zarobki,full-time-pełny etat,getabonus-dostać premię,income-dochód,meetdeadlines-dotrzymywać terminów,paidleave-płatny urlop,part-time-część etatu,payrise-podwyżka,perhour/week/month-na godzinę/tydzień/miesiąc,permanentjob-stała praca,publicholiday-dzień wolny od pracy,salary-pensja,sickleave-zwolnienie lekarskie,taketimeoff-wziąć wolne,tax-podatek,teamwork-praca zespołowa,tip-napiwek,worklonghours-pracować długo,workingconditions-warunki pracy",
-    "SCHOOL-PLACES": "canteen-stołówka,commonroom-świetlica,headteacher’soffice-gabinet dyrektora,laboratory-pracownia,lecturehall-aula,lockerroom-szatnia,playground-boisko/plac zabaw,secretary’soffice-sekretariat,sportsfield-boisko,staffroom-pokój nauczycielski",
-    "SCHOOL-SUBJECTS": "archaeology-archeologia,architecture-architektura,artssubjects-przedmioty artystyczne,bankingandfinance-bankowość i finanse,chemistry-chemia,engineering-inżynieria,foreignlanguages-języki obce,humanities-nauki humanistyczne,IT-informatyka,journalism-dziennikarstwo,law-prawo,marketingandmanagement-marketing i zarządzanie,medicine-medycyna,PE-WF,physics-fizyka,psychology-psychologia,sciencesubjects-przedmioty ścisłe,socialsciences-nauki społeczne,sociology-socjologia,biotechnology-biotechnologia",
-    "LEARNING": "all-rounddevelopment-wszechstronny rozwój,attendacourse-uczęszczać na kurs,becurious-być ciekawym,brainstormideas-przeprowadzać burzę mózgów,concentrateonsth-skupić się na czymś,criticalthinking-myślenie krytyczne,motivate-motywować,personaldevelopment-rozwój osobisty,putaplanintoaction-wdrożyć plan,reviseforsth-powtarzać do czegoś,self-management-zarządzanie sobą,self-motivation-wewnętrzna motywacja,setgoals-wyznaczać cele,strugglewithsth-zmagać się z czymś,takenotes-robić notatki,concentrationspan-czas skupienia,identifyyourlearningstyle-określić styl uczenia się,improveemployability-zwiększyć szanse na zatrudnienie,innermotivation-wewnętrzna motywacja,knowsthinsideout-znać coś bardzo dobrze,memoryaid-technika zapamiętywania,outperform-prześcignąć,pursuitofknowledge-dążenie do wiedzy",
-    "SCHOOL-OBJECTS": "chalk-kreda,compasses-cyrkiel,folder-teczka,highlighter-zakreślacz,holepunch-dziurkacz,protractor-kątomierz,setsquare-ekierka,stapler-zszywacz",
-    "GRADES-EXAMS": "award-nagroda,certificate-świadectwo,cheat-oszukiwać,end-of-termexam-egzamin semestralny,end-of-yearexam-egzamin roczny,entranceexam-egzamin wstępny,exampaper-arkusz egzaminacyjny,extralessons-dodatkowe lekcje,getadegree-zdobyć stopień,getcaught-zostać złapanym,getresults-otrzymać wyniki,givemarks-wystawiać oceny,gotowardssth-składać się na coś,grade/mark-ocena,graduate-ukończyć studia,graduatefrom-ukończyć,memorise-uczyć się na pamięć,mockexam-egzamin próbny,oralexam-egzamin ustny,writtenexam-egzamin pisemny,pastpaper-arkusz z poprzednich lat,retake-zdawać ponownie,school-leavingexam-egzamin końcowy,sendout-wysyłać,takeatest/exam-podejść do egzaminu,tutor-korepetytor,Alevels-odpowiednik matury,academicresults-wyniki w nauce,BA-licencjat humanistyczny,BSc-licencjat ścisły,cramforsth-kuć do egzaminu,getadistinction-otrzymać wyróżnienie,InternationalBaccalaureate-matura międzynarodowa,MA-magister,passwithflyingcolours-zdać celująco,scrapethrough-ledwo zdać,winascholarship-zdobyć stypendium",
-    "SCHOOL-LIFE": "absent-nieobecny,absentee-osoba nieobecna,assessment-ocena,attendance-obecność,bell-dzwonek,bully-dręczyć,checkyourwork-sprawdzić pracę,compulsory-obowiązkowy,coursebook-podręcznik,coursework-praca zaliczeniowa,curriculum-program nauczania,deadline-termin,dictation-dyktando,do/writeanassignment-napisać zadanie,doresearch-prowadzić badania,getpoorresults-mieć słabe wyniki,getsuspended-zostać zawieszonym,giveapresentation-zrobić prezentację,giveatalk-wygłosić referat,gradepointaverage-średnia ocen,handinhomework-oddać pracę domową,misslessons-opuszczać lekcje,optional-opcjonalny,packedlunch-drugie śniadanie,PEkit-strój sportowy,playtruant-wagarować,projectwork-praca projektowa"
-};
-
-const categories = Object.entries(rawCategories).map(([name, values]) => ({
-    name,
-    words: values.split(",").map((entry) => {
-        const separatorIndex = entry.lastIndexOf("-");
-        const english = entry.slice(0, separatorIndex);
-        const polish = entry.slice(separatorIndex + 1);
-
-        return {
-            english: english.trim(),
-            polish: polish.trim()
-        };
-    })
-}));
+const categories = [
+    {
+        name: "JOBS",
+        words: [
+            { english: "accountant", polish: "księgowy / księgowa" },
+            { english: "architect", polish: "architekt / architektka" },
+            { english: "cashier", polish: "kasjer / kasjerka" },
+            { english: "checkout assistant", polish: "kasjer / kasjerka w supermarkecie" },
+            { english: "chef", polish: "kucharz / kucharka" },
+            { english: "computer programmer", polish: "programista / programistka" },
+            { english: "economist", polish: "ekonomista / ekonomistka" },
+            { english: "editor", polish: "redaktor / redaktorka" },
+            { english: "electrician", polish: "elektryk" },
+            { english: "farmer", polish: "rolnik" },
+            { english: "fashion designer", polish: "projektant / projektantka mody" },
+            { english: "firefighter", polish: "strażak" },
+            { english: "flight attendant", polish: "steward / stewardesa" },
+            { english: "journalist", polish: "dziennikarz / dziennikarka" },
+            { english: "judge", polish: "sędzia" },
+            { english: "lawyer", polish: "prawnik / prawniczka" },
+            { english: "lecturer", polish: "wykładowca / wykładowczyni" },
+            { english: "librarian", polish: "bibliotekarz / bibliotekarka" },
+            { english: "manager", polish: "kierownik / kierowniczka" },
+            { english: "nurse", polish: "pielęgniarka" },
+            { english: "office assistant", polish: "asystent / asystentka biura" },
+            { english: "paramedic", polish: "ratownik medyczny" },
+            { english: "pharmacist", polish: "aptekarz / aptekarka" },
+            { english: "plumber", polish: "hydraulik" },
+            { english: "police officer", polish: "policjant / policjantka" },
+            { english: "receptionist", polish: "recepcjonista / recepcjonistka" },
+            { english: "sales assistant", polish: "sprzedawca / sprzedawczyni" },
+            { english: "soldier", polish: "żołnierz" },
+            { english: "surgeon", polish: "chirurg" },
+            { english: "travel agent", polish: "pracownik biura podróży" },
+            { english: "TV presenter", polish: "prezenter / prezenterka telewizyjna" },
+            { english: "vet", polish: "weterynarz / weterynarka" }
+        ]
+    },
+    {
+        name: "WORK-DUTIES",
+        words: [
+            { english: "be at work", polish: "być w pracy" },
+            { english: "be in charge of sth", polish: "odpowiadać za coś" },
+            { english: "be responsible for sth", polish: "być odpowiedzialnym za coś" },
+            { english: "collect data", polish: "zbierać dane" },
+            { english: "do paperwork", polish: "zajmować się dokumentami" },
+            { english: "do sth for a living", polish: "utrzymywać się z czegoś" },
+            { english: "fulfil duties", polish: "wypełniać obowiązki" },
+            { english: "job description", polish: "zakres obowiązków" },
+            { english: "profession", polish: "zawód" },
+            { english: "supervise", polish: "nadzorować" },
+            { english: "take responsibility for sth", polish: "wziąć odpowiedzialność za coś" },
+            { english: "work as sb", polish: "pracować jako ktoś" },
+            { english: "work for a company", polish: "pracować w firmie" },
+            { english: "work in a team", polish: "pracować w zespole" },
+            { english: "work in sales", polish: "pracować w sprzedaży" },
+            { english: "work in the tourist industry", polish: "pracować w branży turystycznej" },
+            { english: "work on sth", polish: "pracować nad czymś" },
+            { english: "work under pressure", polish: "pracować pod presją" },
+            { english: "work with sb", polish: "pracować z kimś" }
+        ]
+    },
+    {
+        name: "JOB-ADJECTIVES",
+        words: [
+            { english: "inspiring", polish: "inspirująca" },
+            { english: "manual", polish: "fizyczna" },
+            { english: "monotonous", polish: "monotonna" },
+            { english: "motivating", polish: "motywująca" },
+            { english: "skilled", polish: "wymagająca kwalifikacji" },
+            { english: "steady", polish: "stabilna" },
+            { english: "stress-free", polish: "bezstresowa" },
+            { english: "unpaid", polish: "bezpłatna" },
+            { english: "well-paid", polish: "dobrze płatna" },
+            { english: "challenging", polish: "ambitna" },
+            { english: "dead-end", polish: "bez perspektyw" },
+            { english: "high-powered", polish: "na wysokim stanowisku" },
+            { english: "menial", polish: "fizyczna / prosta" },
+            { english: "rewarding", polish: "satysfakcjonująca" },
+            { english: "undemanding", polish: "niewymagająca" }
+        ]
+    },
+    {
+        name: "WORK-CONDITIONS",
+        words: [
+            { english: "be badly paid", polish: "być źle opłacanym" },
+            { english: "be well-paid", polish: "być dobrze opłacanym" },
+            { english: "business trip", polish: "podróż służbowa" },
+            { english: "chance of promotion", polish: "szansa na awans" },
+            { english: "colleague", polish: "kolega / koleżanka z pracy" },
+            { english: "do overtime", polish: "pracować w nadgodzinach" },
+            { english: "earnings", polish: "zarobki" },
+            { english: "full-time", polish: "pełny etat" },
+            { english: "get a bonus", polish: "dostać premię" },
+            { english: "income", polish: "dochód" },
+            { english: "meet deadlines", polish: "dotrzymywać terminów" },
+            { english: "paid leave", polish: "płatny urlop" },
+            { english: "part-time", polish: "część etatu" },
+            { english: "pay rise", polish: "podwyżka" },
+            { english: "per hour / week / month", polish: "na godzinę / tydzień / miesiąc" },
+            { english: "permanent job", polish: "stała praca" },
+            { english: "public holiday", polish: "dzień wolny od pracy" },
+            { english: "salary", polish: "pensja" },
+            { english: "sick leave", polish: "zwolnienie lekarskie" },
+            { english: "take time off", polish: "wziąć wolne" },
+            { english: "tax", polish: "podatek" },
+            { english: "teamwork", polish: "praca zespołowa" },
+            { english: "tip", polish: "napiwek" },
+            { english: "work long hours", polish: "pracować długo" },
+            { english: "working conditions", polish: "warunki pracy" }
+        ]
+    },
+    {
+        name: "SCHOOL-PLACES",
+        words: [
+            { english: "canteen", polish: "stołówka" },
+            { english: "common room", polish: "świetlica" },
+            { english: "headteacher's office", polish: "gabinet dyrektora" },
+            { english: "laboratory", polish: "pracownia" },
+            { english: "lecture hall", polish: "aula" },
+            { english: "locker room", polish: "szatnia" },
+            { english: "playground", polish: "boisko / plac zabaw" },
+            { english: "secretary's office", polish: "sekretariat" },
+            { english: "sports field", polish: "boisko" },
+            { english: "staff room", polish: "pokój nauczycielski" }
+        ]
+    },
+    {
+        name: "SCHOOL-SUBJECTS",
+        words: [
+            { english: "archaeology", polish: "archeologia" },
+            { english: "architecture", polish: "architektura" },
+            { english: "arts subjects", polish: "przedmioty artystyczne" },
+            { english: "banking and finance", polish: "bankowość i finanse" },
+            { english: "chemistry", polish: "chemia" },
+            { english: "engineering", polish: "inżynieria" },
+            { english: "foreign languages", polish: "języki obce" },
+            { english: "humanities", polish: "nauki humanistyczne" },
+            { english: "IT", polish: "informatyka" },
+            { english: "journalism", polish: "dziennikarstwo" },
+            { english: "law", polish: "prawo" },
+            { english: "marketing and management", polish: "marketing i zarządzanie" },
+            { english: "medicine", polish: "medycyna" },
+            { english: "PE", polish: "WF" },
+            { english: "physics", polish: "fizyka" },
+            { english: "psychology", polish: "psychologia" },
+            { english: "science subjects", polish: "przedmioty ścisłe" },
+            { english: "social sciences", polish: "nauki społeczne" },
+            { english: "sociology", polish: "socjologia" },
+            { english: "biotechnology", polish: "biotechnologia" }
+        ]
+    },
+    {
+        name: "LEARNING",
+        words: [
+            { english: "all-round development", polish: "wszechstronny rozwój" },
+            { english: "attend a course", polish: "uczęszczać na kurs" },
+            { english: "be curious", polish: "być ciekawym" },
+            { english: "brainstorm ideas", polish: "przeprowadzać burzę mózgów" },
+            { english: "concentrate on sth", polish: "skupić się na czymś" },
+            { english: "critical thinking", polish: "myślenie krytyczne" },
+            { english: "motivate", polish: "motywować" },
+            { english: "personal development", polish: "rozwój osobisty" },
+            { english: "put a plan into action", polish: "wdrożyć plan" },
+            { english: "revise for sth", polish: "powtarzać do czegoś" },
+            { english: "self-management", polish: "zarządzanie sobą" },
+            { english: "self-motivation", polish: "wewnętrzna motywacja" },
+            { english: "set goals", polish: "wyznaczać cele" },
+            { english: "struggle with sth", polish: "zmagać się z czymś" },
+            { english: "take notes", polish: "robić notatki" },
+            { english: "concentration span", polish: "czas skupienia" },
+            { english: "identify your learning style", polish: "określić styl uczenia się" },
+            { english: "improve employability", polish: "zwiększyć szanse na zatrudnienie" },
+            { english: "inner motivation", polish: "wewnętrzna motywacja" },
+            { english: "know sth inside out", polish: "znać coś bardzo dobrze" },
+            { english: "memory aid", polish: "technika zapamiętywania" },
+            { english: "outperform", polish: "prześcignąć" },
+            { english: "pursuit of knowledge", polish: "dążenie do wiedzy" }
+        ]
+    },
+    {
+        name: "SCHOOL-OBJECTS",
+        words: [
+            { english: "chalk", polish: "kreda" },
+            { english: "compasses", polish: "cyrkiel" },
+            { english: "folder", polish: "teczka" },
+            { english: "highlighter", polish: "zakreślacz" },
+            { english: "hole punch", polish: "dziurkacz" },
+            { english: "protractor", polish: "kątomierz" },
+            { english: "set square", polish: "ekierka" },
+            { english: "stapler", polish: "zszywacz" }
+        ]
+    },
+    {
+        name: "GRADES-EXAMS",
+        words: [
+            { english: "award", polish: "nagroda" },
+            { english: "certificate", polish: "świadectwo" },
+            { english: "cheat", polish: "oszukiwać" },
+            { english: "end-of-term exam", polish: "egzamin semestralny" },
+            { english: "end-of-year exam", polish: "egzamin roczny" },
+            { english: "entrance exam", polish: "egzamin wstępny" },
+            { english: "exam paper", polish: "arkusz egzaminacyjny" },
+            { english: "extra lessons", polish: "dodatkowe lekcje" },
+            { english: "get a degree", polish: "zdobyć stopień" },
+            { english: "get caught", polish: "zostać złapanym" },
+            { english: "get results", polish: "otrzymać wyniki" },
+            { english: "give marks", polish: "wystawiać oceny" },
+            { english: "go towards sth", polish: "składać się na coś" },
+            { english: "grade / mark", polish: "ocena" },
+            { english: "graduate", polish: "ukończyć studia" },
+            { english: "graduate from", polish: "ukończyć" },
+            { english: "memorise", polish: "uczyć się na pamięć" },
+            { english: "mock exam", polish: "egzamin próbny" },
+            { english: "oral exam", polish: "egzamin ustny" },
+            { english: "written exam", polish: "egzamin pisemny" },
+            { english: "past paper", polish: "arkusz z poprzednich lat" },
+            { english: "retake", polish: "zdawać ponownie" },
+            { english: "school-leaving exam", polish: "egzamin końcowy" },
+            { english: "send out", polish: "wysyłać" },
+            { english: "take a test / exam", polish: "podejść do egzaminu" },
+            { english: "tutor", polish: "korepetytor" },
+            { english: "A levels", polish: "odpowiednik matury" },
+            { english: "academic results", polish: "wyniki w nauce" },
+            { english: "BA", polish: "licencjat humanistyczny" },
+            { english: "BSc", polish: "licencjat ścisły" },
+            { english: "cram for sth", polish: "kuć do egzaminu" },
+            { english: "get a distinction", polish: "otrzymać wyróżnienie" },
+            { english: "International Baccalaureate", polish: "matura międzynarodowa" },
+            { english: "MA", polish: "magister" },
+            { english: "pass with flying colours", polish: "zdać celująco" },
+            { english: "scrape through", polish: "ledwo zdać" },
+            { english: "win a scholarship", polish: "zdobyć stypendium" }
+        ]
+    },
+    {
+        name: "SCHOOL-LIFE",
+        words: [
+            { english: "absent", polish: "nieobecny" },
+            { english: "absentee", polish: "osoba nieobecna" },
+            { english: "assessment", polish: "ocena" },
+            { english: "attendance", polish: "obecność" },
+            { english: "bell", polish: "dzwonek" },
+            { english: "bully", polish: "dręczyć" },
+            { english: "check your work", polish: "sprawdzić pracę" },
+            { english: "compulsory", polish: "obowiązkowy" },
+            { english: "coursebook", polish: "podręcznik" },
+            { english: "coursework", polish: "praca zaliczeniowa" },
+            { english: "curriculum", polish: "program nauczania" },
+            { english: "deadline", polish: "termin" },
+            { english: "dictation", polish: "dyktando" },
+            { english: "do / write an assignment", polish: "napisać zadanie" },
+            { english: "do research", polish: "prowadzić badania" },
+            { english: "get poor results", polish: "mieć słabe wyniki" },
+            { english: "get suspended", polish: "zostać zawieszonym" },
+            { english: "give a presentation", polish: "zrobić prezentację" },
+            { english: "give a talk", polish: "wygłosić referat" },
+            { english: "grade point average", polish: "średnia ocen" },
+            { english: "hand in homework", polish: "oddać pracę domową" },
+            { english: "miss lessons", polish: "opuszczać lekcje" },
+            { english: "optional", polish: "opcjonalny" },
+            { english: "packed lunch", polish: "drugie śniadanie" },
+            { english: "PE kit", polish: "strój sportowy" },
+            { english: "play truant", polish: "wagarować" },
+            { english: "project work", polish: "praca projektowa" }
+        ]
+    }
+];
 
 const state = {
     activeCategory: null,
@@ -38,6 +280,7 @@ const promptWord = document.getElementById("promptWord");
 const answerForm = document.getElementById("answerForm");
 const answerInput = document.getElementById("answerInput");
 const checkButton = document.getElementById("checkButton");
+const showAnswerButton = document.getElementById("showAnswerButton");
 const nextButton = document.getElementById("nextButton");
 const attemptsValue = document.getElementById("attemptsValue");
 const answerReveal = document.getElementById("answerReveal");
@@ -117,6 +360,7 @@ function startCategory(category) {
     progressBadge.textContent = `${category.words.length} słówek`;
     answerInput.disabled = false;
     checkButton.disabled = false;
+    showAnswerButton.disabled = false;
     nextButton.disabled = false;
     pickRandomWord();
 }
@@ -167,6 +411,15 @@ answerForm.addEventListener("submit", (event) => {
 });
 
 nextButton.addEventListener("click", pickRandomWord);
+
+showAnswerButton.addEventListener("click", () => {
+    if (!state.currentWord) {
+        return;
+    }
+
+    setRevealedAnswer(state.currentWord.english, true);
+    setFeedback("neutral", "Poprawne słówko zostało pokazane. Możesz wpisać je teraz albo wylosować następne.");
+});
 
 renderStats();
 renderCategories();
